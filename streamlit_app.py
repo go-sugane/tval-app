@@ -13,174 +13,280 @@ MASTER_PATH = "エリア集計マスタ.xlsx"
 MASTER_SHEET = "master"
 
 
-# -----------------------------
-# 共通CSS
-# -----------------------------
-st.markdown("""
-<style>
-    .main {
-        background-color: #f6f8fb;
-    }
+def inject_global_css():
+    st.markdown("""
+    <style>
+        html, body, [class*="css"] {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
 
-    .block-container {
-        padding-top: 2rem;
-        padding-bottom: 2rem;
-        padding-left: 2rem;
-        padding-right: 2rem;
-        max-width: 1400px;
-    }
+        .stApp {
+            background:
+                radial-gradient(circle at top left, rgba(30, 58, 138, 0.18), transparent 26%),
+                radial-gradient(circle at top right, rgba(15, 23, 42, 0.12), transparent 22%),
+                linear-gradient(180deg, #eef2ff 0%, #f8fafc 18%, #f8fafc 100%);
+        }
 
-    .hero-card {
-        background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
-        padding: 28px 32px;
-        border-radius: 20px;
-        color: white;
-        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
-        margin-bottom: 24px;
-    }
+        .block-container {
+            max-width: 1380px;
+            padding-top: 1.5rem;
+            padding-bottom: 2rem;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
 
-    .hero-title {
-        font-size: 30px;
-        font-weight: 700;
-        margin-bottom: 8px;
-        letter-spacing: 0.2px;
-    }
+        [data-testid="stHeader"] {
+            background: rgba(0, 0, 0, 0);
+        }
 
-    .hero-subtitle {
-        font-size: 14px;
-        opacity: 0.92;
-        line-height: 1.6;
-    }
+        section[data-testid="stSidebar"] {
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(18px);
+            border-right: 1px solid rgba(226, 232, 240, 0.95);
+        }
 
-    .section-card {
-        background: white;
-        padding: 22px 22px 18px 22px;
-        border-radius: 18px;
-        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
-        border: 1px solid #e5e7eb;
-        margin-bottom: 18px;
-    }
+        .hero-wrap {
+            margin-bottom: 22px;
+        }
 
-    .section-title {
-        font-size: 18px;
-        font-weight: 700;
-        color: #0f172a;
-        margin-bottom: 6px;
-    }
+        .hero-card {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0b1220 0%, #102a6b 55%, #1d4ed8 100%);
+            border-radius: 26px;
+            padding: 30px 34px;
+            box-shadow: 0 22px 55px rgba(15, 23, 42, 0.22);
+            color: #ffffff;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
 
-    .section-caption {
-        font-size: 13px;
-        color: #64748b;
-        margin-bottom: 10px;
-    }
+        .hero-card::before {
+            content: "";
+            position: absolute;
+            top: -60px;
+            right: -20px;
+            width: 220px;
+            height: 220px;
+            background: radial-gradient(circle, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.02) 60%, transparent 75%);
+            border-radius: 999px;
+        }
 
-    .metric-card {
-        background: white;
-        border-radius: 18px;
-        padding: 18px 18px;
-        border: 1px solid #e5e7eb;
-        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
-    }
+        .hero-card::after {
+            content: "";
+            position: absolute;
+            bottom: -100px;
+            left: -40px;
+            width: 260px;
+            height: 260px;
+            background: radial-gradient(circle, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.02) 60%, transparent 75%);
+            border-radius: 999px;
+        }
 
-    .sidebar-note {
-        font-size: 13px;
-        color: #475569;
-        line-height: 1.7;
-    }
+        .hero-eyebrow {
+            font-size: 12px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            opacity: 0.8;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
 
-    .small-note {
-        font-size: 12px;
-        color: #64748b;
-    }
+        .hero-title {
+            font-size: 32px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 10px;
+            letter-spacing: -0.02em;
+        }
 
-    div[data-testid="stMetric"] {
-        background: white;
-        border: 1px solid #e5e7eb;
-        padding: 14px 16px;
-        border-radius: 18px;
-        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
-    }
+        .hero-subtitle {
+            font-size: 14px;
+            line-height: 1.8;
+            opacity: 0.94;
+            max-width: 780px;
+        }
 
-    div[data-testid="stMetricLabel"] {
-        color: #64748b;
-        font-weight: 600;
-    }
+        .glass-card {
+            background: rgba(255,255,255,0.82);
+            backdrop-filter: blur(18px);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            border-radius: 22px;
+            padding: 22px 22px 18px 22px;
+            box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+            margin-bottom: 18px;
+        }
 
-    div[data-testid="stMetricValue"] {
-        color: #0f172a;
-        font-weight: 800;
-    }
+        .glass-card-tight {
+            background: rgba(255,255,255,0.84);
+            backdrop-filter: blur(18px);
+            border: 1px solid rgba(226, 232, 240, 0.92);
+            border-radius: 20px;
+            padding: 18px 18px 16px 18px;
+            box-shadow: 0 14px 34px rgba(15, 23, 42, 0.07);
+            margin-bottom: 16px;
+        }
 
-    .stDownloadButton > button {
-        width: 100%;
-        border-radius: 12px;
-        height: 46px;
-        font-weight: 700;
-    }
+        .section-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 6px;
+            letter-spacing: -0.01em;
+        }
 
-    .stButton > button {
-        border-radius: 12px;
-        font-weight: 700;
-    }
+        .section-caption {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 12px;
+            line-height: 1.7;
+        }
 
-    .stFileUploader {
-        border-radius: 14px;
-    }
-</style>
-""", unsafe_allow_html=True)
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 6px;
+        }
+
+        .sidebar-note {
+            font-size: 13px;
+            color: #475569;
+            line-height: 1.8;
+        }
+
+        .login-shell {
+            min-height: 76vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 430px;
+            background: rgba(255,255,255,0.82);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(226,232,240,0.95);
+            border-radius: 26px;
+            padding: 32px 30px 26px 30px;
+            box-shadow: 0 24px 60px rgba(15,23,42,0.14);
+        }
+
+        .login-brand {
+            font-size: 12px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: #64748b;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .login-title {
+            font-size: 28px;
+            line-height: 1.2;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .login-sub {
+            font-size: 13px;
+            color: #64748b;
+            line-height: 1.8;
+            margin-bottom: 18px;
+        }
+
+        div[data-testid="stMetric"] {
+            background: rgba(255,255,255,0.84);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(226,232,240,0.95);
+            border-radius: 20px;
+            padding: 14px 16px;
+            box-shadow: 0 14px 30px rgba(15,23,42,0.07);
+        }
+
+        div[data-testid="stMetricLabel"] {
+            color: #64748b;
+            font-weight: 700;
+        }
+
+        div[data-testid="stMetricValue"] {
+            color: #0f172a;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        div[data-testid="stFileUploader"] {
+            background: rgba(255,255,255,0.55);
+            border-radius: 16px;
+            border: 1px dashed #cbd5e1;
+            padding: 8px;
+        }
+
+        div[data-baseweb="input"] {
+            background: rgba(248, 250, 252, 0.9);
+            border-radius: 14px;
+        }
+
+        div[data-baseweb="input"] > div {
+            border: 1px solid #dbe4f0 !important;
+            border-radius: 14px !important;
+            background: rgba(248,250,252,0.96) !important;
+            min-height: 46px;
+        }
+
+        .stTextInput label {
+            font-weight: 700 !important;
+            color: #334155 !important;
+        }
+
+        .stButton > button,
+        .stDownloadButton > button,
+        div[data-testid="stFormSubmitButton"] > button {
+            width: 100%;
+            min-height: 46px;
+            border-radius: 14px !important;
+            border: 1px solid rgba(30, 64, 175, 0.18) !important;
+            background: linear-gradient(135deg, #0f172a 0%, #1d4ed8 100%) !important;
+            color: white !important;
+            font-weight: 800 !important;
+            box-shadow: 0 12px 26px rgba(29, 78, 216, 0.24);
+        }
+
+        .stButton > button:hover,
+        .stDownloadButton > button:hover,
+        div[data-testid="stFormSubmitButton"] > button:hover {
+            filter: brightness(1.03);
+            transform: translateY(-1px);
+        }
+
+        .plain-button .stButton > button {
+            background: #ffffff !important;
+            color: #0f172a !important;
+            border: 1px solid #dbe4f0 !important;
+            box-shadow: none !important;
+        }
+
+        div[data-testid="stDataFrame"] {
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid rgba(226,232,240,0.95);
+        }
+
+        .tiny-note {
+            font-size: 12px;
+            color: #64748b;
+            line-height: 1.7;
+        }
+
+        hr {
+            border-color: #e2e8f0 !important;
+        }
+    </style>
+    """, unsafe_allow_html=True)
 
 
-# -----------------------------
-# ログイン
-# -----------------------------
-def check_login():
-    if "logged_in" not in st.session_state:
-        st.session_state.logged_in = False
-
-    if st.session_state.logged_in:
-        return True
-
-    left, center, right = st.columns([1, 1.2, 1])
-
-    with center:
-        st.markdown("""
-        <div class="hero-card" style="margin-top: 40px;">
-            <div class="hero-title">📊 TVAL出稿量集計ツール</div>
-            <div class="hero-subtitle">
-                社内向けの簡易集計アプリです。<br>
-                IDとパスワードを入力してログインしてください。
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-
-        with st.container():
-            st.markdown('<div class="section-card">', unsafe_allow_html=True)
-            st.markdown('<div class="section-title">ログイン</div>', unsafe_allow_html=True)
-            st.markdown('<div class="section-caption">配布されたID / パスワードを入力してください。</div>', unsafe_allow_html=True)
-
-            with st.form("login_form"):
-                user_id = st.text_input("ID", placeholder="例：yomiko")
-                password = st.text_input("パスワード", type="password", placeholder="パスワードを入力")
-                submitted = st.form_submit_button("ログイン")
-
-            if submitted:
-                correct_id = st.secrets["APP_ID"]
-                correct_password = st.secrets["APP_PASSWORD"]
-
-                if user_id == correct_id and password == correct_password:
-                    st.session_state.logged_in = True
-                    st.rerun()
-                else:
-                    st.error("IDまたはパスワードが違います。")
-
-            st.markdown('</div>', unsafe_allow_html=True)
-
-    return False
-
-
-# -----------------------------
-# Excel出力
-# -----------------------------
 def build_output_excel(summary_df: pd.DataFrame) -> bytes:
     output = BytesIO()
     with pd.ExcelWriter(output, engine="openpyxl") as writer:
@@ -188,24 +294,66 @@ def build_output_excel(summary_df: pd.DataFrame) -> bytes:
     return output.getvalue()
 
 
-# -----------------------------
-# 本体
-# -----------------------------
+def check_login():
+    if "logged_in" not in st.session_state:
+        st.session_state.logged_in = False
+
+    if st.session_state.logged_in:
+        return True
+
+    inject_global_css()
+
+    left, center, right = st.columns([1.2, 1, 1.2])
+    with center:
+        st.markdown('<div class="login-shell">', unsafe_allow_html=True)
+        st.markdown('<div class="login-card">', unsafe_allow_html=True)
+        st.markdown('<div class="login-brand">YOMIKO INTERNAL TOOL</div>', unsafe_allow_html=True)
+        st.markdown('<div class="login-title">TVAL Dashboard</div>', unsafe_allow_html=True)
+        st.markdown(
+            '<div class="login-sub">'
+            '社内向けの出稿量集計ツールです。<br>'
+            '配布されたID / パスワードを入力してログインしてください。'
+            '</div>',
+            unsafe_allow_html=True
+        )
+
+        with st.form("login_form", clear_on_submit=False):
+            user_id = st.text_input("ID", placeholder="IDを入力")
+            password = st.text_input("パスワード", type="password", placeholder="パスワードを入力")
+            submitted = st.form_submit_button("ログイン")
+
+        if submitted:
+            if user_id == st.secrets["APP_ID"] and password == st.secrets["APP_PASSWORD"]:
+                st.session_state.logged_in = True
+                st.rerun()
+            else:
+                st.error("IDまたはパスワードが違います。")
+
+        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    return False
+
+
 def main():
-    # ヘッダー
+    inject_global_css()
+
+    st.markdown('<div class="hero-wrap">', unsafe_allow_html=True)
     st.markdown("""
     <div class="hero-card">
-        <div class="hero-title">📊 TVAL出稿量集計ツール</div>
+        <div class="hero-eyebrow">YOMIKO INTERNAL TOOL</div>
+        <div class="hero-title">📊 TVAL出稿量集計ダッシュボード</div>
         <div class="hero-subtitle">
             input Excel をアップロードすると、F列のエリアを対応エリアへ変換し、
             Y列の数値を対応エリアごとに自動集計します。
+            毎月の定型業務を、より速く・迷いなく処理するための社内用ツールです。
         </div>
     </div>
     """, unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-    # サイドバー
     with st.sidebar:
-        st.markdown("## 操作パネル")
+        st.markdown('<div class="sidebar-title">操作パネル</div>', unsafe_allow_html=True)
         st.markdown(
             '<div class="sidebar-note">'
             '1. input Excel をアップロード<br>'
@@ -225,48 +373,47 @@ def main():
 
         st.divider()
 
-        st.markdown("### 利用条件")
+        st.markdown("### 条件")
         st.markdown(
             '<div class="sidebar-note">'
             '・F列：エリア<br>'
             '・Y列：集計対象の数値<br>'
-            '・マスタ：エリア集計マスタ.xlsx の master シート'
+            '・マスタ：エリア集計マスタ.xlsx / master シート'
             '</div>',
             unsafe_allow_html=True
         )
 
         st.divider()
 
+        st.markdown('<div class="plain-button">', unsafe_allow_html=True)
         if st.button("ログアウト", use_container_width=True):
             st.session_state.logged_in = False
             st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
 
-    # 初期画面
     if uploaded_file is None:
-        left, right = st.columns([1.1, 1])
+        col1, col2 = st.columns([1.2, 1])
 
-        with left:
-            st.markdown('<div class="section-card">', unsafe_allow_html=True)
-            st.markdown('<div class="section-title">はじめに</div>', unsafe_allow_html=True)
-            st.markdown('<div class="section-caption">左の操作パネルからファイルをアップロードしてください。</div>', unsafe_allow_html=True)
-
-            st.info("input Excel をアップロードすると、集計結果がこの画面に表示されます。")
+        with col1:
+            st.markdown('<div class="glass-card">', unsafe_allow_html=True)
+            st.markdown('<div class="section-title">アップロード待機中</div>', unsafe_allow_html=True)
+            st.markdown('<div class="section-caption">左側の操作パネルから input Excel を選択してください。</div>', unsafe_allow_html=True)
+            st.info("ファイルをアップロードすると、この画面に集計結果が表示されます。")
             st.markdown("""
             **このツールでできること**
-            - エリア名を対応エリアに自動変換
+            - エリア名を対応エリアへ自動変換
             - 未対応エリアを除外して集計
-            - output.xlsx をそのままダウンロード
+            - output.xlsx をその場でダウンロード
             """)
             st.markdown('</div>', unsafe_allow_html=True)
 
-        with right:
-            st.markdown('<div class="section-card">', unsafe_allow_html=True)
-            st.markdown('<div class="section-title">想定フロー</div>', unsafe_allow_html=True)
+        with col2:
+            st.markdown('<div class="glass-card">', unsafe_allow_html=True)
+            st.markdown('<div class="section-title">処理フロー</div>', unsafe_allow_html=True)
             st.markdown('<div class="section-caption">毎月の定型業務を短時間で処理できます。</div>', unsafe_allow_html=True)
-
             st.markdown("""
             ① input Excel を選択  
-            ② 自動で対応エリアへ変換  
+            ② 対応エリアへ変換  
             ③ 対応エリアごとに集計  
             ④ output.xlsx をダウンロード
             """)
@@ -274,7 +421,6 @@ def main():
         return
 
     try:
-        # 読み込み
         df = pd.read_excel(uploaded_file)
         master = pd.read_excel(MASTER_PATH, sheet_name=MASTER_SHEET)
 
@@ -286,7 +432,6 @@ def main():
         master_key_col = "エリア"
         master_value_col = "対応エリア"
 
-        # 表記ゆれ補正
         df[input_area_col] = (
             df[input_area_col]
             .astype(str)
@@ -301,19 +446,14 @@ def main():
             .str.replace(",", "、", regex=False)
         )
 
-        # 対応エリア付与
         area_dict = dict(zip(master[master_key_col], master[master_value_col]))
         df["対応エリア"] = df[input_area_col].map(area_dict)
 
         unmatched_count = int(df["対応エリア"].isna().sum())
 
-        # 未対応除外
         df = df[df["対応エリア"].notna()].copy()
-
-        # 数値整形
         df[value_col] = pd.to_numeric(df[value_col], errors="coerce").fillna(0)
 
-        # 集計
         summary = (
             df.groupby("対応エリア")[value_col]
             .sum()
@@ -327,22 +467,20 @@ def main():
         top_area = summary.iloc[0]["対応エリア"] if not summary.empty else "-"
         top_value = float(summary.iloc[0]["合計値"]) if not summary.empty else 0
 
-        # KPI
-        c1, c2, c3, c4 = st.columns(4)
-        with c1:
+        m1, m2, m3, m4 = st.columns(4)
+        with m1:
             st.metric("対応エリア数", f"{area_count:,}")
-        with c2:
+        with m2:
             st.metric("合計値", f"{total_value:,.0f}")
-        with c3:
+        with m3:
             st.metric("未対応件数", f"{unmatched_count:,}")
-        with c4:
-            st.metric("最大エリア", f"{top_area}", f"{top_value:,.0f}" if top_area != "-" else None)
+        with m4:
+            st.metric("最大エリア", top_area, f"{top_value:,.0f}" if top_area != "-" else None)
 
-        # レイアウト
-        left, right = st.columns([1.5, 1])
+        left, right = st.columns([1.45, 1])
 
         with left:
-            st.markdown('<div class="section-card">', unsafe_allow_html=True)
+            st.markdown('<div class="glass-card">', unsafe_allow_html=True)
             st.markdown('<div class="section-title">集計結果</div>', unsafe_allow_html=True)
             st.markdown('<div class="section-caption">対応エリアごとの集計結果です。</div>', unsafe_allow_html=True)
 
@@ -353,9 +491,9 @@ def main():
             st.markdown('</div>', unsafe_allow_html=True)
 
         with right:
-            st.markdown('<div class="section-card">', unsafe_allow_html=True)
+            st.markdown('<div class="glass-card">', unsafe_allow_html=True)
             st.markdown('<div class="section-title">ダウンロード</div>', unsafe_allow_html=True)
-            st.markdown('<div class="section-caption">集計結果のみを Excel で出力します。</div>', unsafe_allow_html=True)
+            st.markdown('<div class="section-caption">集計結果のみを Excel 形式で出力します。</div>', unsafe_allow_html=True)
 
             excel_data = build_output_excel(summary)
 
@@ -367,8 +505,7 @@ def main():
                 use_container_width=True,
             )
 
-            st.markdown("<br>", unsafe_allow_html=True)
-
+            st.markdown("<div style='height:10px;'></div>", unsafe_allow_html=True)
             st.success("集計処理が完了しました。")
 
             with st.expander("補足情報"):
@@ -378,8 +515,7 @@ def main():
 
             st.markdown('</div>', unsafe_allow_html=True)
 
-        # グラフ
-        st.markdown('<div class="section-card">', unsafe_allow_html=True)
+        st.markdown('<div class="glass-card">', unsafe_allow_html=True)
         st.markdown('<div class="section-title">上位10エリア</div>', unsafe_allow_html=True)
         st.markdown('<div class="section-caption">合計値が大きい順に表示しています。</div>', unsafe_allow_html=True)
 
